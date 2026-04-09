@@ -42,6 +42,60 @@
       z-index: 100;
     }
 
+    /* Vertical nav */
+    .vertical-nav {
+      position: fixed;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      height: 20px;
+    }
+
+    .nav-line {
+      width: 24px;
+      height: 2px;
+      background: rgba(255,255,255,0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .nav-item.active .nav-line {
+      width: 32px;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .nav-item:hover .nav-line {
+      background: rgba(255,255,255,0.6);
+    }
+
+    .nav-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .nav-item.active .nav-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
     /* Parallax landscape */
     .landscape {
       position: fixed;
@@ -233,9 +287,27 @@
 
     /* Mobile styles */
     @media (max-width: 768px) {
+      .vertical-nav {
+        left: 16px;
+        gap: 12px;
+      }
+
+      .nav-line {
+        width: 16px;
+      }
+
+      .nav-item.active .nav-line {
+        width: 24px;
+      }
+
+      .nav-label {
+        font-size: 8px;
+      }
+
       .story-line {
         font-size: 1.3rem;
         padding: 0 24px;
+        padding-left: 60px;
       }
 
       .scroll-spacer {
@@ -275,6 +347,25 @@
 <body>
   <div class="demo-banner">TOY EXAMPLE. Approach 2: Dynamic and Interactive. Not Final Design.</div>
 
+  <nav class="vertical-nav">
+    <div class="nav-item active" data-section="story" onclick="scrollToSection('story')">
+      <div class="nav-line"></div>
+      <span class="nav-label">The Story</span>
+    </div>
+    <div class="nav-item" data-section="books" onclick="scrollToSection('books')">
+      <div class="nav-line"></div>
+      <span class="nav-label">The Books</span>
+    </div>
+    <div class="nav-item" data-section="series" onclick="scrollToSection('series')">
+      <div class="nav-line"></div>
+      <span class="nav-label">The Series</span>
+    </div>
+    <div class="nav-item" data-section="world" onclick="scrollToSection('world')">
+      <div class="nav-line"></div>
+      <span class="nav-label">The World</span>
+    </div>
+  </nav>
+
   <div class="landscape">
     <div class="layer layer-sky"></div>
     <div class="layer layer-mist"></div>
@@ -311,19 +402,19 @@
 
   <div class="scroll-hint">Scroll to explore</div>
 
-  <section class="cards-section">
+  <section class="cards-section" id="cards-section">
     <div class="cards-content">
       <h2>Continue the Journey</h2>
       <div class="cards">
-        <div class="card">
+        <div class="card" id="section-books">
           <h3>The Books</h3>
           <p>Explore the original saga</p>
         </div>
-        <div class="card">
+        <div class="card" id="section-series">
           <h3>The Series</h3>
           <p>Watch the adaptation</p>
         </div>
-        <div class="card">
+        <div class="card" id="section-world">
           <h3>The World</h3>
           <p>Meet the characters</p>
         </div>
@@ -381,6 +472,59 @@
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
+
+    // Vertical nav functionality
+    const navItems = document.querySelectorAll('.nav-item');
+    const cardsSection = document.getElementById('cards-section');
+
+    function updateVerticalNav() {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const cardsSectionTop = cardsSection.offsetTop;
+
+      // Check if we're in story section or cards section
+      if (scrollTop < cardsSectionTop - windowHeight / 2) {
+        setActiveNav('story');
+      } else {
+        // We're in or past cards section
+        const cardsRect = cardsSection.getBoundingClientRect();
+        if (cardsRect.top < windowHeight / 2) {
+          // Determine which card is most visible
+          const booksCard = document.getElementById('section-books');
+          const seriesCard = document.getElementById('section-series');
+          const worldCard = document.getElementById('section-world');
+
+          const booksRect = booksCard.getBoundingClientRect();
+          const seriesRect = seriesCard.getBoundingClientRect();
+          const worldRect = worldCard.getBoundingClientRect();
+
+          // Simple check based on cards section visibility
+          if (cardsRect.top < windowHeight / 3) {
+            setActiveNav('books');
+          }
+        }
+      }
+    }
+
+    function setActiveNav(section) {
+      navItems.forEach(item => {
+        if (item.dataset.section === section) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
+
+    function scrollToSection(section) {
+      if (section === 'story') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (section === 'books' || section === 'series' || section === 'world') {
+        cardsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    window.addEventListener('scroll', updateVerticalNav, { passive: true });
   </script>
 </body>
 </html>

@@ -39,11 +39,121 @@
       z-index: 100;
     }
 
+    /* Horizontal nav */
+    .nav {
+      position: fixed;
+      top: 36px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(245, 241, 235, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 90;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: #2a2a2a;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #2a2a2a;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    /* Hamburger menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 10px;
+      margin-right: -10px;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: #2a2a2a;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 96px;
+      left: 0;
+      right: 0;
+      background: rgba(245, 241, 235, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      z-index: 89;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .mobile-menu.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mobile-menu a {
+      display: block;
+      padding: 16px 0;
+      color: #2a2a2a;
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .mobile-menu a:last-child {
+      border-bottom: none;
+    }
+
     /* Main layout */
     .layout {
       display: flex;
       min-height: 100vh;
-      padding-top: 36px;
+      padding-top: 96px;
     }
 
     /* Left content */
@@ -202,10 +312,26 @@
         overflow-x: hidden;
       }
 
+      .nav {
+        padding: 0 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
       .layout {
         flex-direction: column;
         min-height: auto;
-        padding-top: 36px;
+        padding-top: 96px;
         padding-bottom: 100px;
       }
 
@@ -286,6 +412,28 @@
 <body>
   <div class="demo-banner">TOY EXAMPLE. Approach 1: Minimal Hub. Not Final Design.</div>
 
+  <nav class="nav">
+    <a href="#" class="nav-logo">A Land Remembered</a>
+    <ul class="nav-links">
+      <li><a href="#">The Books</a></li>
+      <li><a href="#">The Series</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Shop</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#">The Books</a>
+    <a href="#">The Series</a>
+    <a href="#">About</a>
+    <a href="#">Shop</a>
+  </div>
+
   <div class="layout">
     <div class="content">
       <h1>A Land Remembered</h1>
@@ -310,5 +458,14 @@
     <p><strong>Approach 1: Minimal Hub</strong></p>
     <p>Clean. Typographic. Book spines as navigation. Inspired by Operate, Museo Thyssen, Obys Library.</p>
   </div>
+
+  <script>
+    function toggleMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>
