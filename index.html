@@ -206,20 +206,26 @@
     const buttons = document.querySelectorAll('.switcher-btn');
     const frames = document.querySelectorAll('.frame-container iframe');
 
-    // Initialize pill position
+    const hashMap = {
+      1: 'minimal',
+      2: 'dynamic',
+      3: 'experiential'
+    };
+
+    const reverseHashMap = {
+      'minimal': 1,
+      'dynamic': 2,
+      'experiential': 3
+    };
+
     function updatePill(btn) {
       pill.style.width = btn.offsetWidth + 'px';
       pill.style.left = btn.offsetLeft + 'px';
     }
 
-    // Set initial pill position
-    updatePill(buttons[0]);
-
-    function switchApproach(num, btn) {
-      // Create ripple effect
+    function switchApproach(num, btn, updateHash = true) {
       const ripple = document.createElement('span');
       ripple.classList.add('ripple');
-      const rect = btn.getBoundingClientRect();
       ripple.style.left = '50%';
       ripple.style.top = '50%';
       ripple.style.width = ripple.style.height = '20px';
@@ -228,25 +234,39 @@
       btn.appendChild(ripple);
       setTimeout(() => ripple.remove(), 600);
 
-      // Update active states
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Move pill
       updatePill(btn);
 
-      // Switch iframe
       frames.forEach(f => f.classList.remove('active'));
       document.getElementById(`frame-${num}`).classList.add('active');
+
+      if (updateHash) {
+        history.pushState(null, '', `#${hashMap[num]}`);
+      }
     }
 
-    // Handle window resize
+    function loadFromHash() {
+      const hash = window.location.hash.replace('#', '');
+      const num = reverseHashMap[hash];
+      if (num) {
+        const btn = document.querySelector(`[data-target="${num}"]`);
+        switchApproach(num, btn, false);
+      } else {
+        updatePill(buttons[0]);
+      }
+    }
+
+    loadFromHash();
+
+    window.addEventListener('hashchange', loadFromHash);
+
     window.addEventListener('resize', () => {
       const activeBtn = document.querySelector('.switcher-btn.active');
       updatePill(activeBtn);
     });
 
-    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       const current = parseInt(document.querySelector('.switcher-btn.active').dataset.target);
       let next = current;
