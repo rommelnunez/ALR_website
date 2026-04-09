@@ -194,6 +194,93 @@
       font-size: 11px;
       max-width: 300px;
     }
+
+    /* Mobile styles */
+    @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .layout {
+        flex-direction: column;
+        min-height: auto;
+        padding-top: 36px;
+        padding-bottom: 100px;
+      }
+
+      .content {
+        max-width: 100%;
+        padding: 40px 24px;
+        text-align: center;
+        order: 1;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .tagline {
+        margin-bottom: 32px;
+      }
+
+      .ctas {
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .cta {
+        padding: 14px 24px;
+        font-size: 11px;
+      }
+
+      .bookshelf {
+        width: 100%;
+        justify-content: center;
+        padding: 20px;
+        order: 2;
+      }
+
+      .shelf {
+        gap: 8px;
+      }
+
+      .spine {
+        width: 50px;
+        height: 280px;
+        min-height: 200px;
+        max-height: 300px;
+      }
+
+      .spine:nth-child(2) {
+        height: 260px;
+        max-height: 280px;
+      }
+
+      .spine:nth-child(3) {
+        height: 240px;
+        max-height: 260px;
+      }
+
+      .spine span {
+        font-size: 12px;
+        letter-spacing: 2px;
+      }
+
+      .spine:hover {
+        transform: translateX(-15px) rotateY(-15deg);
+      }
+
+      .approach-note {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        text-align: center;
+        padding: 20px;
+        max-width: 100%;
+        order: 3;
+      }
+    }
   </style>
 </head>
 <body>
