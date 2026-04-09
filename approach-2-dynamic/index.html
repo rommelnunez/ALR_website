@@ -431,7 +431,8 @@
     const storyLines = document.querySelectorAll('.story-line');
     const spacers = document.querySelectorAll('.scroll-spacer');
     const scrollHint = document.querySelector('.scroll-hint');
-    const cardsSection = document.querySelector('.cards-section');
+    const cardsSection = document.getElementById('cards-section');
+    const navItems = document.querySelectorAll('.nav-item');
     let currentIndex = 0;
 
     function updateStoryLine(index) {
@@ -468,40 +469,22 @@
           updateStoryLine(index);
         }
       });
+
+      // Update vertical nav
+      updateVerticalNav();
     }
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    // Vertical nav functionality
-    const navItems = document.querySelectorAll('.nav-item');
-    const cardsSection = document.getElementById('cards-section');
 
     function updateVerticalNav() {
       const scrollTop = window.scrollY;
       const windowHeight = window.innerHeight;
       const cardsSectionTop = cardsSection.offsetTop;
 
-      // Check if we're in story section or cards section
       if (scrollTop < cardsSectionTop - windowHeight / 2) {
         setActiveNav('story');
       } else {
-        // We're in or past cards section
         const cardsRect = cardsSection.getBoundingClientRect();
         if (cardsRect.top < windowHeight / 2) {
-          // Determine which card is most visible
-          const booksCard = document.getElementById('section-books');
-          const seriesCard = document.getElementById('section-series');
-          const worldCard = document.getElementById('section-world');
-
-          const booksRect = booksCard.getBoundingClientRect();
-          const seriesRect = seriesCard.getBoundingClientRect();
-          const worldRect = worldCard.getBoundingClientRect();
-
-          // Simple check based on cards section visibility
-          if (cardsRect.top < windowHeight / 3) {
-            setActiveNav('books');
-          }
+          setActiveNav('books');
         }
       }
     }
@@ -524,7 +507,8 @@
       }
     }
 
-    window.addEventListener('scroll', updateVerticalNav, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
   </script>
 </body>
 </html>
