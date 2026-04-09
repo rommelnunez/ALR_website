@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A Land Remembered — Approach 2: Dynamic & Interactive</title>
+  <title>A Land Remembered | Dynamic and Interactive</title>
   <style>
-    /* TOY EXAMPLE — NOT FINAL DESIGN */
+    /* TOY EXAMPLE. NOT FINAL DESIGN. */
 
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap');
 
@@ -13,6 +13,10 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -99,51 +103,46 @@
       75% { transform: translateY(-30px) translateX(15px); opacity: 0.9; }
     }
 
-    /* Content sections */
-    .scroll-container {
+    /* Story section */
+    .story-section {
       position: relative;
       z-index: 1;
-      padding-top: 50px;
+      padding-top: 36px;
     }
 
-    section {
-      min-height: 100vh;
+    .story-container {
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 60px 40px;
+      position: sticky;
+      top: 0;
     }
 
-    .content-box {
-      max-width: 600px;
-      text-align: center;
-    }
-
-    h1 {
+    .story-line {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
       font-weight: 400;
-      margin-bottom: 24px;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 40px;
       opacity: 0;
-      animation: fadeUp 1s ease forwards;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      position: absolute;
     }
 
-    .logline {
-      font-size: 1.2rem;
-      font-weight: 300;
-      line-height: 1.8;
-      color: rgba(245, 241, 235, 0.8);
-      opacity: 0;
-      animation: fadeUp 1s ease 0.3s forwards;
+    .story-line.active {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    .scroll-spacer {
+      height: 100vh;
     }
 
     .scroll-hint {
-      position: absolute;
+      position: fixed;
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
@@ -152,6 +151,12 @@
       text-transform: uppercase;
       opacity: 0.5;
       animation: bounce 2s ease infinite;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .scroll-hint.hidden {
+      opacity: 0;
     }
 
     @keyframes bounce {
@@ -159,9 +164,27 @@
       50% { transform: translateX(-50%) translateY(10px); }
     }
 
-    /* Second section - reveal on scroll */
-    .section-2 {
-      background: rgba(0,0,0,0.3);
+    /* Cards section */
+    .cards-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+      background: rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 2;
+    }
+
+    .cards-content {
+      text-align: center;
+    }
+
+    .cards-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      margin-bottom: 60px;
     }
 
     .cards {
@@ -175,7 +198,7 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       padding: 40px 30px;
-      width: 200px;
+      width: 220px;
       text-align: center;
       transition: all 0.4s ease;
       cursor: pointer;
@@ -188,27 +211,29 @@
 
     .card h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       margin-bottom: 12px;
     }
 
     .card p {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: rgba(255,255,255,0.6);
     }
 
     /* Footer note */
     .approach-note {
       text-align: center;
-      padding: 60px 40px;
-      background: rgba(0,0,0,0.5);
+      padding: 40px;
+      background: rgba(0,0,0,0.6);
       color: rgba(255,255,255,0.6);
-      font-size: 13px;
+      font-size: 12px;
+      position: relative;
+      z-index: 2;
     }
   </style>
 </head>
 <body>
-  <div class="demo-banner">TOY EXAMPLE — Approach 2: Dynamic & Interactive — Not Final Design</div>
+  <div class="demo-banner">TOY EXAMPLE. Approach 2: Dynamic and Interactive. Not Final Design.</div>
 
   <div class="landscape">
     <div class="layer layer-sky"></div>
@@ -221,39 +246,101 @@
     <div class="firefly"></div>
   </div>
 
-  <div class="scroll-container">
-    <section class="section-1">
-      <div class="content-box">
-        <h1>A Land Remembered</h1>
-        <p class="logline">Three generations. One wild frontier.<br>The Florida that was — and the family that fought to survive it.</p>
-      </div>
-      <div class="scroll-hint">Scroll to explore</div>
-    </section>
+  <div class="story-section">
+    <div class="story-container">
+      <p class="story-line active" data-index="0">A Land Remembered</p>
+      <p class="story-line" data-index="1">Florida, 1858.</p>
+      <p class="story-line" data-index="2">A young man arrives with nothing but a dream.</p>
+      <p class="story-line" data-index="3">The land is wild. Untamed. Unforgiving.</p>
+      <p class="story-line" data-index="4">He builds a homestead from swamp and cypress.</p>
+      <p class="story-line" data-index="5">His son inherits the struggle.</p>
+      <p class="story-line" data-index="6">His grandson inherits an empire.</p>
+      <p class="story-line" data-index="7">Three generations. One wild frontier.</p>
+    </div>
 
-    <section class="section-2">
-      <div class="content-box">
-        <div class="cards">
-          <div class="card">
-            <h3>The Books</h3>
-            <p>Explore the original saga</p>
-          </div>
-          <div class="card">
-            <h3>The Series</h3>
-            <p>Watch the adaptation</p>
-          </div>
-          <div class="card">
-            <h3>The World</h3>
-            <p>Meet the characters</p>
-          </div>
+    <!-- Scroll spacers for each line -->
+    <div class="scroll-spacer" data-trigger="0"></div>
+    <div class="scroll-spacer" data-trigger="1"></div>
+    <div class="scroll-spacer" data-trigger="2"></div>
+    <div class="scroll-spacer" data-trigger="3"></div>
+    <div class="scroll-spacer" data-trigger="4"></div>
+    <div class="scroll-spacer" data-trigger="5"></div>
+    <div class="scroll-spacer" data-trigger="6"></div>
+    <div class="scroll-spacer" data-trigger="7"></div>
+  </div>
+
+  <div class="scroll-hint">Scroll to explore</div>
+
+  <section class="cards-section">
+    <div class="cards-content">
+      <h2>Continue the Journey</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>The Books</h3>
+          <p>Explore the original saga</p>
+        </div>
+        <div class="card">
+          <h3>The Series</h3>
+          <p>Watch the adaptation</p>
+        </div>
+        <div class="card">
+          <h3>The World</h3>
+          <p>Meet the characters</p>
         </div>
       </div>
-    </section>
-
-    <div class="approach-note">
-      <p><strong>Approach 2 — Dynamic & Interactive</strong></p>
-      <p>Breathing landscape, scroll-driven narrative, guided experience.<br>
-      Inspired by: Sutera, Air, Nildo</p>
     </div>
+  </section>
+
+  <div class="approach-note">
+    <p><strong>Approach 2: Dynamic and Interactive</strong></p>
+    <p>Breathing landscape. Scroll driven narrative. Guided experience. Inspired by Sutera, Air, Nildo.</p>
   </div>
+
+  <script>
+    const storyLines = document.querySelectorAll('.story-line');
+    const spacers = document.querySelectorAll('.scroll-spacer');
+    const scrollHint = document.querySelector('.scroll-hint');
+    const cardsSection = document.querySelector('.cards-section');
+    let currentIndex = 0;
+
+    function updateStoryLine(index) {
+      if (index === currentIndex) return;
+
+      storyLines.forEach((line, i) => {
+        if (i === index) {
+          line.classList.add('active');
+        } else {
+          line.classList.remove('active');
+        }
+      });
+
+      currentIndex = index;
+    }
+
+    function handleScroll() {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+
+      // Hide scroll hint after scrolling
+      if (scrollTop > 100) {
+        scrollHint.classList.add('hidden');
+      } else {
+        scrollHint.classList.remove('hidden');
+      }
+
+      // Find which spacer we're in
+      spacers.forEach((spacer, index) => {
+        const rect = spacer.getBoundingClientRect();
+        const spacerMiddle = rect.top + rect.height / 2;
+
+        if (spacerMiddle > 0 && spacerMiddle < windowHeight) {
+          updateStoryLine(index);
+        }
+      });
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  </script>
 </body>
 </html>
