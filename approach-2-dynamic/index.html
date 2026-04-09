@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Land Remembered — Approach 2: Dynamic & Interactive</title>
+  <style>
+    /* TOY EXAMPLE — NOT FINAL DESIGN */
+
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #1a2e1a;
+      color: #f5f1eb;
+      overflow-x: hidden;
+    }
+
+    /* Demo banner */
+    .demo-banner {
+      background: #ff6b6b;
+      color: white;
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
+    /* Parallax landscape */
+    .landscape {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .layer-sky {
+      background: linear-gradient(180deg, #2d4a3e 0%, #1a2e1a 60%, #0d1a0d 100%);
+    }
+
+    .layer-mist {
+      background: radial-gradient(ellipse at 50% 80%, rgba(200,220,200,0.15) 0%, transparent 60%);
+      animation: mist 8s ease-in-out infinite;
+    }
+
+    @keyframes mist {
+      0%, 100% { opacity: 0.3; transform: translateX(-5%); }
+      50% { opacity: 0.6; transform: translateX(5%); }
+    }
+
+    .layer-trees {
+      background: linear-gradient(transparent 40%, #0d1a0d 100%);
+    }
+
+    /* Fireflies */
+    .firefly {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #ffffaa;
+      border-radius: 50%;
+      box-shadow: 0 0 10px 3px rgba(255,255,150,0.6);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .firefly:nth-child(1) { top: 30%; left: 20%; animation-delay: 0s; }
+    .firefly:nth-child(2) { top: 50%; left: 70%; animation-delay: 2s; }
+    .firefly:nth-child(3) { top: 70%; left: 40%; animation-delay: 4s; }
+    .firefly:nth-child(4) { top: 45%; left: 85%; animation-delay: 1s; }
+    .firefly:nth-child(5) { top: 60%; left: 15%; animation-delay: 3s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+      25% { transform: translateY(-20px) translateX(10px); opacity: 1; }
+      50% { transform: translateY(-10px) translateX(-5px); opacity: 0.6; }
+      75% { transform: translateY(-30px) translateX(15px); opacity: 0.9; }
+    }
+
+    /* Content sections */
+    .scroll-container {
+      position: relative;
+      z-index: 1;
+      padding-top: 50px;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+    }
+
+    .content-box {
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 400;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards;
+    }
+
+    .logline {
+      font-size: 1.2rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(245, 241, 235, 0.8);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      animation: bounce 2s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(10px); }
+    }
+
+    /* Second section - reveal on scroll */
+    .section-2 {
+      background: rgba(0,0,0,0.3);
+    }
+
+    .cards {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 40px 30px;
+      width: 200px;
+      text-align: center;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-10px);
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Footer note */
+    .approach-note {
+      text-align: center;
+      padding: 60px 40px;
+      background: rgba(0,0,0,0.5);
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-banner">TOY EXAMPLE — Approach 2: Dynamic & Interactive — Not Final Design</div>
+
+  <div class="landscape">
+    <div class="layer layer-sky"></div>
+    <div class="layer layer-mist"></div>
+    <div class="layer layer-trees"></div>
+    <div class="firefly"></div>
+    <div class="firefly"></div>
+    <div class="firefly"></div>
+    <div class="firefly"></div>
+    <div class="firefly"></div>
+  </div>
+
+  <div class="scroll-container">
+    <section class="section-1">
+      <div class="content-box">
+        <h1>A Land Remembered</h1>
+        <p class="logline">Three generations. One wild frontier.<br>The Florida that was — and the family that fought to survive it.</p>
+      </div>
+      <div class="scroll-hint">Scroll to explore</div>
+    </section>
+
+    <section class="section-2">
+      <div class="content-box">
+        <div class="cards">
+          <div class="card">
+            <h3>The Books</h3>
+            <p>Explore the original saga</p>
+          </div>
+          <div class="card">
+            <h3>The Series</h3>
+            <p>Watch the adaptation</p>
+          </div>
+          <div class="card">
+            <h3>The World</h3>
+            <p>Meet the characters</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="approach-note">
+      <p><strong>Approach 2 — Dynamic & Interactive</strong></p>
+      <p>Breathing landscape, scroll-driven narrative, guided experience.<br>
+      Inspired by: Sutera, Air, Nildo</p>
+    </div>
+  </div>
+</body>
+</html>

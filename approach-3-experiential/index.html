@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Land Remembered — Approach 3: Experiential</title>
+  <style>
+    /* TOY EXAMPLE — NOT FINAL DESIGN */
+
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a1510;
+      color: #f5f1eb;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Demo banner */
+    .demo-banner {
+      background: #ff6b6b;
+      color: white;
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
+    /* Map container */
+    .map-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(50,80,50,0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(30,60,80,0.3) 0%, transparent 40%),
+        linear-gradient(180deg, #0a1510 0%, #1a2e25 50%, #0d1a15 100%);
+      cursor: grab;
+      padding-top: 40px;
+    }
+
+    .map-container:active {
+      cursor: grabbing;
+    }
+
+    /* Grid overlay for map feel */
+    .map-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    /* Landmarks */
+    .landmark {
+      position: absolute;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .landmark-marker {
+      width: 24px;
+      height: 24px;
+      background: rgba(255,200,100,0.8);
+      border: 2px solid #fff;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+      transition: all 0.3s ease;
+    }
+
+    .landmark:hover .landmark-marker {
+      transform: scale(1.3);
+      background: #fff;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,200,100,0.4); }
+      50% { box-shadow: 0 0 0 15px rgba(255,200,100,0); }
+    }
+
+    .landmark-label {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .landmark:hover .landmark-label {
+      opacity: 1;
+    }
+
+    /* Position landmarks */
+    .landmark-1 { top: 25%; left: 30%; }
+    .landmark-2 { top: 45%; left: 55%; }
+    .landmark-3 { top: 65%; left: 35%; }
+    .landmark-4 { top: 35%; left: 70%; }
+
+    /* Panel (slides in when landmark clicked) */
+    .panel {
+      position: fixed;
+      top: 40px;
+      right: -400px;
+      width: 380px;
+      height: calc(100vh - 40px);
+      background: rgba(20,35,30,0.95);
+      border-left: 1px solid rgba(255,255,255,0.1);
+      padding: 40px;
+      transition: right 0.4s ease;
+      z-index: 50;
+      overflow-y: auto;
+    }
+
+    .panel.active {
+      right: 0;
+    }
+
+    .panel-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+
+    .panel-close:hover {
+      opacity: 1;
+    }
+
+    .panel h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .panel p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 20px;
+    }
+
+    .panel-media {
+      width: 100%;
+      height: 180px;
+      background: rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .panel-cta {
+      display: inline-block;
+      padding: 12px 24px;
+      background: rgba(255,200,100,0.9);
+      color: #0a1510;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .panel-cta:hover {
+      background: #fff;
+    }
+
+    /* Title overlay */
+    .title-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .title-overlay h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .title-overlay p {
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    /* Instructions */
+    .instructions {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+
+    /* Footer note */
+    .approach-note {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      padding: 15px;
+      background: rgba(0,0,0,0.7);
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+      z-index: 60;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-banner">TOY EXAMPLE — Approach 3: Experiential — Not Final Design</div>
+
+  <div class="map-container">
+    <div class="map-grid"></div>
+
+    <div class="title-overlay">
+      <h1>A Land Remembered</h1>
+      <p>Explore the Florida Frontier</p>
+    </div>
+
+    <div class="landmark landmark-1" onclick="openPanel('homestead')">
+      <div class="landmark-marker"></div>
+      <div class="landmark-label">The Homestead</div>
+    </div>
+
+    <div class="landmark landmark-2" onclick="openPanel('swamp')">
+      <div class="landmark-marker"></div>
+      <div class="landmark-label">Cypress Swamp</div>
+    </div>
+
+    <div class="landmark landmark-3" onclick="openPanel('river')">
+      <div class="landmark-marker"></div>
+      <div class="landmark-label">Kissimmee River</div>
+    </div>
+
+    <div class="landmark landmark-4" onclick="openPanel('cattle')">
+      <div class="landmark-marker"></div>
+      <div class="landmark-label">Cattle Grounds</div>
+    </div>
+
+    <div class="instructions">Click landmarks to explore</div>
+  </div>
+
+  <div class="panel" id="panel">
+    <button class="panel-close" onclick="closePanel()">&times;</button>
+    <div class="panel-media">[Video/Image Placeholder]</div>
+    <h2 id="panel-title">Location Title</h2>
+    <p id="panel-text">Location description will appear here with details from the books and series.</p>
+    <a href="#" class="panel-cta">Explore in Series</a>
+  </div>
+
+  <div class="approach-note">
+    <strong>Approach 3 — Experiential</strong> ·
+    Map-based exploration, landmark navigation, immersive panels ·
+    Inspired by: Primland, Into the Amazon, Jazak Voda
+  </div>
+
+  <script>
+    const panelData = {
+      homestead: {
+        title: "The MacIvey Homestead",
+        text: "Where Tobias MacIvey first staked his claim in the untamed Florida wilderness. A simple cabin that became the foundation of a dynasty spanning three generations."
+      },
+      swamp: {
+        title: "Cypress Swamp",
+        text: "The heart of wild Florida. Dense cypress stands, hidden waterways, and the constant presence of alligators. This is where the MacIveys learned to survive — or die."
+      },
+      river: {
+        title: "Kissimmee River",
+        text: "The lifeblood of the frontier. Its waters carried cattle drives, connected isolated homesteads, and witnessed the transformation of Florida from wilderness to civilization."
+      },
+      cattle: {
+        title: "The Cattle Grounds",
+        text: "Open prairies where the MacIveys built their fortune. Florida's original cowboys drove scrub cattle through palmettos and marshland, forging an industry that defined the state."
+      }
+    };
+
+    function openPanel(location) {
+      const panel = document.getElementById('panel');
+      const data = panelData[location];
+      document.getElementById('panel-title').textContent = data.title;
+      document.getElementById('panel-text').textContent = data.text;
+      panel.classList.add('active');
+    }
+
+    function closePanel() {
+      document.getElementById('panel').classList.remove('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Land Remembered — Approach 1: Minimal Hub</title>
+  <style>
+    /* TOY EXAMPLE — NOT FINAL DESIGN */
+
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f1eb;
+      color: #2a2a2a;
+      min-height: 100vh;
+    }
+
+    /* Demo banner */
+    .demo-banner {
+      background: #ff6b6b;
+      color: white;
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .tagline {
+      font-size: 1rem;
+      color: #666;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Book spines section */
+    .spines {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 60px 0;
+      perspective: 1000px;
+    }
+
+    .spine {
+      width: 60px;
+      height: 320px;
+      background: linear-gradient(135deg, #8b7355 0%, #6b5344 100%);
+      border-radius: 2px 6px 6px 2px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 4px 12px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .spine:nth-child(2) { background: linear-gradient(135deg, #5c6b4a 0%, #3d4a32 100%); }
+    .spine:nth-child(3) { background: linear-gradient(135deg, #4a5c6b 0%, #324a5c 100%); }
+
+    .spine span {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      color: #f5f1eb;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    .spine:hover {
+      transform: translateY(-20px) rotateY(-15deg);
+      box-shadow: 8px 12px 24px rgba(0,0,0,0.25);
+    }
+
+    /* CTAs */
+    .ctas {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 80px;
+    }
+
+    .cta {
+      text-decoration: none;
+      padding: 16px 40px;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .cta-primary {
+      background: #2a2a2a;
+      color: #f5f1eb;
+    }
+
+    .cta-primary:hover {
+      background: #1a1a1a;
+    }
+
+    .cta-secondary {
+      border: 1px solid #2a2a2a;
+      color: #2a2a2a;
+    }
+
+    .cta-secondary:hover {
+      background: #2a2a2a;
+      color: #f5f1eb;
+    }
+
+    /* Footer note */
+    .approach-note {
+      text-align: center;
+      margin-top: 100px;
+      padding-top: 40px;
+      border-top: 1px solid #ddd;
+      color: #999;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-banner">TOY EXAMPLE — Approach 1: Minimal Hub — Not Final Design</div>
+
+  <div class="container">
+    <header>
+      <h1>A Land Remembered</h1>
+      <p class="tagline">A Florida Saga</p>
+    </header>
+
+    <div class="spines">
+      <div class="spine"><span>Book One</span></div>
+      <div class="spine"><span>Book Two</span></div>
+      <div class="spine"><span>Book Three</span></div>
+    </div>
+
+    <div class="ctas">
+      <a href="#" class="cta cta-primary">Watch the Series</a>
+      <a href="#" class="cta cta-secondary">Shop the Books</a>
+    </div>
+
+    <div class="approach-note">
+      <p><strong>Approach 1 — Minimal Hub</strong></p>
+      <p>Clean, typographic, gets out of the way. Book spines as navigation.<br>
+      Inspired by: Operate, Museo Thyssen, Obys Library</p>
+    </div>
+  </div>
+</body>
+</html>
